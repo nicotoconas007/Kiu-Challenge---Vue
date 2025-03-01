@@ -2,11 +2,11 @@
   <div class="container">
     <div v-for="(show, index) in shows" :key="index">
       <div class="card">
-        <img :src="show.image?.original" alt="image" />
+        <img :src="show.image" alt="image" />
         <h1>{{ show.name }}</h1>
         <p class="type">{{ show.type }}</p>
-        <p>Network: {{ show.network?.name }}</p>
-        <p><button>Official Site</button></p>
+        <p>Network: {{ show.network }}</p>
+        <p><button @click="openOfficialSite(show.officialSite)" v-if="show.officialSite">Official Site</button></p>
       </div>
     </div>
   </div>
@@ -23,6 +23,11 @@ export default {
   },
   async mounted() {
     this.shows = await getShowsByPage(1);
+  },
+  methods: {
+    openOfficialSite(url) {
+      window.open(url, "_blank");
+    },
   },
 };
 </script>
