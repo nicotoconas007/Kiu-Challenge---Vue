@@ -1,12 +1,26 @@
 <template>
   <div class="container">
-    <div v-for="(show, index) in shows" :key="index">
+    <div class="filtered-list">
+      <ShowFilteredList
+        :options="allGenres"
+        filterLabel="Géneros"
+        @filter="applyGenreFilter"
+      />
+    </div>
+    <div v-for="(show, index) in filteredShows" :key="index">
       <div class="card">
         <img :src="show.image" alt="image" />
         <h1>{{ show.name }}</h1>
         <p class="type">{{ show.type }}</p>
         <p>Network: {{ show.network }}</p>
-        <p><button @click="openOfficialSite(show.officialSite)" v-if="show.officialSite">Official Site</button></p>
+        <p>
+          <button
+            @click="openOfficialSite(show.officialSite)"
+            v-if="show.officialSite"
+          >
+            Official Site
+          </button>
+        </p>
       </div>
     </div>
   </div>
@@ -14,12 +28,35 @@
 
 <script>
 import { getShowsByPage } from "@/services/ShowsService.js";
+import ShowFilteredList from "./ShowFilteredList.vue";
+
 export default {
   name: "ShowList",
+  components: {
+    ShowFilteredList,
+  },
   data() {
     return {
       shows: [],
+      selectedGenres: [],
     };
+  },
+  computed: {
+    filteredShows() {
+      return this.shows.filter((show) => {
+        const matchesGenre =
+          this.selectedGenres.length === 0 ||
+          this.selectedGenres.some((genre) => show.genres.includes(genre));
+        return matchesGenre;
+      });
+    },
+    allGenres() {
+      const genresSet = new Set();
+      this.shows.forEach((show) =>
+        show.genres.forEach((genre) => genresSet.add(genre))
+      );
+      return Array.from(genresSet);
+    },
   },
   async mounted() {
     this.shows = await getShowsByPage(1);
@@ -27,6 +64,9 @@ export default {
   methods: {
     openOfficialSite(url) {
       window.open(url, "_blank");
+    },
+    applyGenreFilter(selectedGenres) {
+      this.selectedGenres = selectedGenres;
     },
   },
 };
@@ -39,6 +79,12 @@ export default {
   gap: 15px;
   flex-direction: column;
   padding-top: 15px;
+  justify-content: center;
+}
+.filtered-list {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
