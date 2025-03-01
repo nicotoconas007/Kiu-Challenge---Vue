@@ -9,19 +9,19 @@
     </div>
     <div v-for="(show, index) in filteredShows" :key="index">
       <div class="card">
-        <img :src="show.image" alt="image" />
-        <h1>{{ show.name }}</h1>
-        <p class="type">{{ show.type }}</p>
-        <p>Network: {{ show.network }}</p>
-        <p>
-          <button
-            @click="openOfficialSite(show.officialSite)"
-            v-if="show.officialSite"
-          >
-            Official Site
-          </button>
-        </p>
+        <img style="width: 25%;" :src="show.image" alt="image" />
+        <div style="width: 50%;">
+          <h1>{{ show.name }}</h1>
+          <p class="type">{{ show.type }}</p>
+          <p>Network: {{ show.network }}</p>
+        </div>
       </div>
+      <button
+        @click="openOfficialSite(show.officialSite)"
+        v-if="show.officialSite"
+      >
+        Official Site
+      </button>
     </div>
   </div>
 </template>
@@ -88,12 +88,16 @@ export default {
 }
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 80%;
+  max-width: 400px;
   margin: auto;
   text-align: center;
   font-family: arial;
   background-color: white;
   padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  border-bottom: 4px solid white;
 }
 
 .type {
@@ -112,6 +116,7 @@ button {
   cursor: pointer;
   width: 100%;
   font-size: 18px;
+  max-width: 400px;
 }
 
 img {
