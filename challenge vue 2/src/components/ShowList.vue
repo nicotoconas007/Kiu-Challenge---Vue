@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="filtered-list">
+    <div v-if="shows.length" class="filtered-list">
       <ShowFilteredList
         :options="allGenres"
         filterLabel="Géneros"
